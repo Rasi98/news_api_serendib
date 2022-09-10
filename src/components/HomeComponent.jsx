@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import NavBar from "./NavBar";
 import HeadlineComponent from './HeadlineComponent';
 import news from "../services/news";
+import backgroundImg from '../assets/bck.jpg'
 
 function HomeComponent() {
     const[headline,setHeadline] = useState([]);
@@ -28,16 +29,16 @@ function HomeComponent() {
     }
     
     return(
-        <Grid container spacing={2} direction={"column"}>
+        <Grid container spacing={2} direction={"column"}  sx={{ backgroundImage: `url(${backgroundImg})`}}>
         <Grid item xs={12}>
             <NavBar/>
         </Grid>
-        <Grid item container direction={"row"} spacing={2}>
+        <Grid item container direction={"row"} spacing={3}>
             {
                 headlineList()
             }
         </Grid>
-    </Grid>
+         </Grid>
     );
 }
 
