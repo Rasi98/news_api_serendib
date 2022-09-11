@@ -1,11 +1,11 @@
-import axios from 'axios'
-import { ARTICLES_API } from './api_key'
+import axios from "axios";
+import { ARTICLES_API } from "./api_key";
 
-export default async function news() {
-    try {
-        const res = await axios.get(ARTICLES_API)
-        return res.data.articles
-    } catch (err) {
-        console.log(err)
-    }
+export default async function news(page) {
+  try {
+    const res = await axios.get(`${ARTICLES_API}&page=${page}`);
+    return res.data.articles;
+  } catch (err) {
+    console.log(err);
+  }
 }

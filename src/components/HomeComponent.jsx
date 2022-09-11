@@ -1,45 +1,75 @@
-import React,{useState,useEffect} from "react";
-import Grid from '@mui/material/Grid';
+import React, { useState, useEffect, useRef } from "react";
+import Grid from "@mui/material/Grid";
 import NavBar from "./NavBar";
-import HeadlineComponent from './HeadlineComponent';
+import HeadlineComponent from "./HeadlineComponent";
 import news from "../services/news";
-import backgroundImg from '../assets/bck.jpg'
 
 function HomeComponent() {
-    const[headline,setHeadline] = useState([]);
+  const [headline, setHeadline] = useState([]);
+  const [page, setPage] = useState(1);
+  const sepRef = useRef();
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-    useEffect(() => {
-        getHeadlines()
-       }, [])
+  //call news function
+  const getHeadlines = async () => {
+    const result = await news(page);
+    setHeadline((state) => [...state, ...result]);
+  };
 
-    //call news function
-    const getHeadlines = async () => {
-        const result = await news()
-        console.log(result)
-        setHeadline(result)
-    }
+  useEffect(() => {
+    getHeadlines();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
-    //render headline card list
-    const headlineList = () => {
-        return headline?.map((item, index) => {
-            return(
-                <HeadlineComponent key={index} news={item}/>
-            );
-        })
-    }
-    
-    return(
-        <Grid container spacing={2} direction={"column"}  sx={{ backgroundImage: `url(${backgroundImg})`}}>
-        <Grid item xs={12}>
-            <NavBar/>
-        </Grid>
-        <Grid item container direction={"row"} spacing={3}>
-            {
-                headlineList()
-            }
-        </Grid>
-         </Grid>
+  const handleScroll = () => {
+    let offsetTop = sepRef.current.offsetTop - window.pageYOffset;
+    const position = Math.round(
+      ((window.innerHeight - offsetTop) * 100) / sepRef.current.clientHeight
     );
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (scrollPosition === 90) {
+      setPage((state) => state + 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollPosition]);
+
+  //render headline card list
+  const headlineList = () => {
+    return headline?.map((item, index) => {
+      return <HeadlineComponent key={index} news={item} />;
+    });
+  };
+
+  return (
+    <Grid
+      container
+      spacing={2}
+      direction={"column"}
+      sx={{
+        backgroundColor: "#FDFEFE",
+        scrollBehavior: "smooth",
+      }}
+      ref={sepRef}
+    >
+      <Grid item xs={12}>
+        <NavBar />
+      </Grid>
+      <Grid item container spacing={3}>
+        {headlineList()}
+      </Grid>
+    </Grid>
+  );
 }
 
 export default HomeComponent;
