@@ -57,7 +57,7 @@ function HomeComponent() {
       spacing={2}
       direction={"column"}
       sx={{
-        backgroundColor: "#FDFEFE",
+        backgroundColor: "#ECF0F1",
         scrollBehavior: "smooth",
       }}
       ref={sepRef}
