@@ -10,7 +10,7 @@ function HomeComponent() {
   const sepRef = useRef();
   const [scrollPosition, setScrollPosition] = useState(0);
 
-  //call news function
+  //call get news function
   const getHeadlines = async () => {
     const result = await news(page);
     setHeadline((state) => [...state, ...result]);
